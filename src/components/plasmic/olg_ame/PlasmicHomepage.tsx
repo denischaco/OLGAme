@@ -62,7 +62,6 @@ import { CmsQueryRepeater } from "@plasmicpkgs/plasmic-cms";
 import Card from "../../Card"; // plasmic-import: AEwQa5n9bvp8/component
 import { CmsRowField } from "@plasmicpkgs/plasmic-cms";
 import BotonLugares from "../../BotonLugares"; // plasmic-import: 4spuvqDqcbmi/component
-import Select from "../../Select"; // plasmic-import: v_kC1eoHoKoW/component
 import { ParallaxWrapper } from "@plasmicpkgs/react-scroll-parallax";
 
 import { useScreenVariants as useScreenVariantseFkgQ5Oo74U } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: e-fkgQ5OO74u/globalVariant
@@ -76,6 +75,7 @@ import sty from "./PlasmicHomepage.module.css"; // plasmic-import: 6UL6L3862Hyg/
 
 import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: 6YQ-s3QiGNsF/icon
 import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: uZPcVb-BA-6n/icon
+import SquareMinusSvgIcon from "./icons/PlasmicIcon__SquareMinusSvg"; // plasmic-import: wFP_NiOwExPb/icon
 import personajesAltoNatijotaPngFrWgai2GciiY from "./images/personajesAltoNatijotaPng.png"; // plasmic-import: FrWgai2GciiY/picture
 import mesaOlgaRemovebgPreviewPngDsAq82Khaq7N from "./images/mesaOlgaRemovebgPreviewPng.png"; // plasmic-import: dsAQ82Khaq7N/picture
 import mesaOlgaJpgG6LPdfZGkZno from "./images/mesaOlgaJpg.jpg"; // plasmic-import: G6lPdfZGkZNO/picture
@@ -94,7 +94,6 @@ export const PlasmicHomepage__ArgProps = new Array<ArgPropType>();
 export type PlasmicHomepage__OverridesType = {
   root?: Flex__<"div">;
   menu?: Flex__<typeof AntdMenu>;
-  section?: Flex__<"section">;
   personajes?: Flex__<typeof CmsQueryRepeater>;
   botonLugares?: Flex__<typeof BotonLugares>;
   conductores?: Flex__<"section">;
@@ -102,7 +101,7 @@ export type PlasmicHomepage__OverridesType = {
   mesa?: Flex__<"section">;
   mesaza?: Flex__<"div">;
   form?: Flex__<"section">;
-  select?: Flex__<typeof Select>;
+  columns?: Flex__<"div">;
   introBloqueShoWs?: Flex__<"section">;
   scrollParallax?: Flex__<typeof ParallaxWrapper>;
   bloqueShoWs?: Flex__<"section">;
@@ -151,12 +150,6 @@ function PlasmicHomepage__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
-      },
-      {
-        path: "select.value",
-        type: "private",
-        variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => "SI"
       }
     ],
     [$props, $ctx, $refs]
@@ -352,9 +345,7 @@ function PlasmicHomepage__RenderFunc(props: {
                 {"Selecciona la FORMACI\u00d3N\nde CONDUCTORES"}
               </h1>
               <section
-                data-plasmic-name={"section"}
-                data-plasmic-override={overrides.section}
-                className={classNames(projectcss.all, sty.section)}
+                className={classNames(projectcss.all, sty.section__pLc4)}
               >
                 <Button
                   className={classNames("__wab_instance", sty.button__dv1Pw)}
@@ -670,63 +661,64 @@ function PlasmicHomepage__RenderFunc(props: {
                 sty.text__qZyJj
               )}
             >
-              {"ESTA FORMACI\u00d3N "}
+              {"ESTA COMBINACI\u00d3N:"}
             </div>
-            <Select
-              data-plasmic-name={"select"}
-              data-plasmic-override={overrides.select}
-              className={classNames("__wab_instance", sty.select)}
-              color={"softPurple"}
-              onChange={(...eventArgs) => {
-                generateStateOnChangeProp($state, ["select", "value"])(
-                  eventArgs[0]
-                );
-              }}
-              options={(() => {
-                const __composite = [
-                  { value: null, label: null },
-                  { value: null, label: null }
-                ];
-                __composite["0"]["value"] = "SI";
-                __composite["0"]["label"] = "SI";
-                __composite["1"]["value"] = "NO";
-                __composite["1"]["label"] = "NO";
-                return __composite;
-              })()}
-              value={generateStateValueProp($state, ["select", "value"])}
-            />
-
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text___1FoRt
-              )}
-            >
-              {"SUCEDI\u00d3\nALGUNA VEZ"}
-            </div>
-            <Button
-              className={classNames("__wab_instance", sty.button___80Qqo)}
-              color={"blue"}
-              shape={"rounded"}
-              showStartIcon={true}
-              startIcon={
-                <CheckSvgIcon
-                  className={classNames(projectcss.all, sty.svg__dqdXq)}
-                  role={"img"}
-                />
-              }
-            >
+            <section className={classNames(projectcss.all, sty.section__vHdLy)}>
               <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__xbSKd
-                )}
+                data-plasmic-name={"columns"}
+                data-plasmic-override={overrides.columns}
+                className={classNames(projectcss.all, sty.columns)}
               >
-                {"ARRIESGAR"}
+                <div className={classNames(projectcss.all, sty.column___8Xc1C)}>
+                  <Button
+                    className={classNames("__wab_instance", sty.button___80Qqo)}
+                    color={"green"}
+                    shape={"rounded"}
+                    showStartIcon={true}
+                    startIcon={
+                      <CheckSvgIcon
+                        className={classNames(projectcss.all, sty.svg__dqdXq)}
+                        role={"img"}
+                      />
+                    }
+                  >
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__xbSKd
+                      )}
+                    >
+                      {"SUCEDI\u00d3 ALGUNA VEZ"}
+                    </div>
+                  </Button>
+                </div>
+                <div className={classNames(projectcss.all, sty.column__li2H)}>
+                  <Button
+                    className={classNames("__wab_instance", sty.button__ki1CT)}
+                    color={"red"}
+                    shape={"rounded"}
+                    showStartIcon={true}
+                    startIcon={
+                      <SquareMinusSvgIcon
+                        className={classNames(projectcss.all, sty.svg___6DpGx)}
+                        role={"img"}
+                      />
+                    }
+                  >
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__vkY7
+                      )}
+                    >
+                      {"NUNCA SUCEDI\u00d3"}
+                    </div>
+                  </Button>
+                </div>
               </div>
-            </Button>
+            </section>
           </section>
           <section
             data-plasmic-name={"introBloqueShoWs"}
@@ -912,7 +904,6 @@ const PlasmicDescendants = {
   root: [
     "root",
     "menu",
-    "section",
     "personajes",
     "botonLugares",
     "conductores",
@@ -920,7 +911,7 @@ const PlasmicDescendants = {
     "mesa",
     "mesaza",
     "form",
-    "select",
+    "columns",
     "introBloqueShoWs",
     "scrollParallax",
     "bloqueShoWs",
@@ -928,15 +919,14 @@ const PlasmicDescendants = {
     "link"
   ],
   menu: ["menu"],
-  section: ["section"],
   personajes: ["personajes", "botonLugares"],
   botonLugares: ["botonLugares"],
   conductores: ["conductores", "personajesSeleccionados"],
   personajesSeleccionados: ["personajesSeleccionados"],
   mesa: ["mesa", "mesaza"],
   mesaza: ["mesaza"],
-  form: ["form", "select"],
-  select: ["select"],
+  form: ["form", "columns"],
+  columns: ["columns"],
   introBloqueShoWs: ["introBloqueShoWs", "scrollParallax"],
   scrollParallax: ["scrollParallax"],
   bloqueShoWs: ["bloqueShoWs", "programas", "link"],
@@ -949,7 +939,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   menu: typeof AntdMenu;
-  section: "section";
   personajes: typeof CmsQueryRepeater;
   botonLugares: typeof BotonLugares;
   conductores: "section";
@@ -957,7 +946,7 @@ type NodeDefaultElementType = {
   mesa: "section";
   mesaza: "div";
   form: "section";
-  select: typeof Select;
+  columns: "div";
   introBloqueShoWs: "section";
   scrollParallax: typeof ParallaxWrapper;
   bloqueShoWs: "section";
@@ -1026,7 +1015,6 @@ export const PlasmicHomepage = Object.assign(
   {
     // Helper components rendering sub-elements
     menu: makeNodeComponent("menu"),
-    section: makeNodeComponent("section"),
     personajes: makeNodeComponent("personajes"),
     botonLugares: makeNodeComponent("botonLugares"),
     conductores: makeNodeComponent("conductores"),
@@ -1034,7 +1022,7 @@ export const PlasmicHomepage = Object.assign(
     mesa: makeNodeComponent("mesa"),
     mesaza: makeNodeComponent("mesaza"),
     form: makeNodeComponent("form"),
-    select: makeNodeComponent("select"),
+    columns: makeNodeComponent("columns"),
     introBloqueShoWs: makeNodeComponent("introBloqueShoWs"),
     scrollParallax: makeNodeComponent("scrollParallax"),
     bloqueShoWs: makeNodeComponent("bloqueShoWs"),
