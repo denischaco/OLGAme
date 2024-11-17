@@ -61,6 +61,8 @@ import {
   usePlasmicInvalidate
 } from "@plasmicapp/react-web/lib/data-sources";
 
+import { AntdPopover } from "@plasmicpkgs/antd5/skinny/registerPopover";
+import { RichDetails } from "@plasmicpkgs/plasmic-rich-components/skinny/rich-details";
 import { AntdMenu } from "@plasmicpkgs/antd5/skinny/registerMenu";
 import { AntdMenuItem } from "@plasmicpkgs/antd5/skinny/registerMenu";
 import Button from "../../Button"; // plasmic-import: -LisnOPJofcL/component
@@ -103,9 +105,11 @@ export const PlasmicHomepage__ArgProps = new Array<ArgPropType>("children");
 
 export type PlasmicHomepage__OverridesType = {
   root?: Flex__<"div">;
+  score?: Flex__<typeof AntdPopover>;
+  dataDetails?: Flex__<typeof RichDetails>;
+  tusJugadas?: Flex__<"div">;
   menu?: Flex__<typeof AntdMenu>;
   clear?: Flex__<typeof Button>;
-  random?: Flex__<typeof Button>;
   bt1?: Flex__<"div">;
   _1?: Flex__<"div">;
   bt2?: Flex__<"div">;
@@ -243,6 +247,12 @@ function PlasmicHomepage__RenderFunc(props: {
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) =>
           $props.unnamedGroupOfVariants
+      },
+      {
+        path: "score.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -315,6 +325,79 @@ function PlasmicHomepage__RenderFunc(props: {
             sty.root
           )}
         >
+          <AntdPopover
+            data-plasmic-name={"score"}
+            data-plasmic-override={overrides.score}
+            arrow={true}
+            className={classNames("__wab_instance", sty.score)}
+            content={
+              <div className={classNames(projectcss.all, sty.freeBox___3Ghap)}>
+                <RichDetails
+                  data-plasmic-name={"dataDetails"}
+                  data-plasmic-override={overrides.dataDetails}
+                  bordered={true}
+                  className={classNames("__wab_instance", sty.dataDetails)}
+                  column={1}
+                  data={(() => {
+                    try {
+                      return $queries.conductoresAirtable;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  layout={"vertical"}
+                />
+              </div>
+            }
+            contentText={"Popover contents"}
+            defaultOpen={false}
+            defaultStylesClassName={classNames(
+              projectcss.root_reset,
+              projectcss.plasmic_default_styles,
+              projectcss.plasmic_mixins,
+              projectcss.plasmic_tokens,
+              plasmic_antd_5_hostless_css.plasmic_tokens,
+              plasmic_plasmic_rich_components_css.plasmic_tokens
+            )}
+            mouseEnterDelay={0}
+            mouseLeaveDelay={0}
+            onOpenChange={generateStateOnChangeProp($state, ["score", "open"])}
+            open={generateStateValueProp($state, ["score", "open"])}
+            popoverContentClassName={classNames({
+              [sty["pcls__4FEXQjGFJSR"]]: true
+            })}
+            popoverScopeClassName={sty["score__popover"]}
+            title={
+              <div
+                data-plasmic-name={"tusJugadas"}
+                data-plasmic-override={overrides.tusJugadas}
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.tusJugadas
+                )}
+              >
+                {"TUS JUGADAS:"}
+              </div>
+            }
+            trigger={"click"}
+          >
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__pdnqq
+              )}
+            >
+              {"PUNTAJE: 150 "}
+            </div>
+          </AntdPopover>
           <AntdMenu
             data-plasmic-name={"menu"}
             data-plasmic-override={overrides.menu}
@@ -501,27 +584,6 @@ function PlasmicHomepage__RenderFunc(props: {
                       )}
                     >
                       {"limpiar seleccionados"}
-                    </div>
-                  </Button>
-                  <Button
-                    data-plasmic-name={"random"}
-                    data-plasmic-override={overrides.random}
-                    className={classNames("__wab_instance", sty.random)}
-                    endIcon={
-                      <IconIcon
-                        className={classNames(projectcss.all, sty.svg__eFuDq)}
-                        role={"img"}
-                      />
-                    }
-                  >
-                    <div
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.__wab_text,
-                        sty.text__xc0Yz
-                      )}
-                    >
-                      {"asignar aleatoriamente"}
                     </div>
                   </Button>
                   <div
@@ -1505,9 +1567,11 @@ function PlasmicHomepage__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
+    "score",
+    "dataDetails",
+    "tusJugadas",
     "menu",
     "clear",
-    "random",
     "bt1",
     "_1",
     "bt2",
@@ -1534,9 +1598,11 @@ const PlasmicDescendants = {
     "programa",
     "fondoDefecto"
   ],
+  score: ["score", "dataDetails", "tusJugadas"],
+  dataDetails: ["dataDetails"],
+  tusJugadas: ["tusJugadas"],
   menu: ["menu"],
   clear: ["clear"],
-  random: ["random"],
   bt1: ["bt1", "_1"],
   _1: ["_1"],
   bt2: ["bt2", "_2"],
@@ -1574,9 +1640,11 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  score: typeof AntdPopover;
+  dataDetails: typeof RichDetails;
+  tusJugadas: "div";
   menu: typeof AntdMenu;
   clear: typeof Button;
-  random: typeof Button;
   bt1: "div";
   _1: "div";
   bt2: "div";
@@ -1664,9 +1732,11 @@ export const PlasmicHomepage = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    score: makeNodeComponent("score"),
+    dataDetails: makeNodeComponent("dataDetails"),
+    tusJugadas: makeNodeComponent("tusJugadas"),
     menu: makeNodeComponent("menu"),
     clear: makeNodeComponent("clear"),
-    random: makeNodeComponent("random"),
     bt1: makeNodeComponent("bt1"),
     _1: makeNodeComponent("_1"),
     bt2: makeNodeComponent("bt2"),
