@@ -2,6 +2,7 @@
   "name": "tmp-cpa",
   "version": "0.1.0",
   "private": true,
+  "skipLibCheck": true,
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
     "@ant-design/pro-components": "^2.6.4",
