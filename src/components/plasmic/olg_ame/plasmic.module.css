@@ -15,7 +15,10 @@
   );
 }
 
-.plasmic_default_styles {
+.plasmic_default_styles,
+.plasmic_default_styles:where(
+    .global_unnamedGlobalGroupOfVariants_unnamedVariant
+  ) {
   --mixin-9QbM3tR7HX2d_font-family: "Bree Serif", serif;
   --mixin-9QbM3tR7HX2d_font-size: 16px;
   --mixin-9QbM3tR7HX2d_font-weight: 400;
@@ -140,13 +143,17 @@
 }
 
 @media (min-width: 0px) and (max-width: 428px) {
-  .plasmic_default_styles {
+  .plasmic_default_styles,
+  .plasmic_default_styles:where(
+      .global_unnamedGlobalGroupOfVariants_unnamedVariant
+    ) {
     --mixin-9SaW92vyTke6_font-size: 48px;
     --mixin-9SaW92vyTke6_white-space: pre-wrap;
   }
 }
 
-.plasmic_mixins {
+.plasmic_mixins,
+.plasmic_mixins:where(.global_unnamedGlobalGroupOfVariants_unnamedVariant) {
   --mixin-8IpQ-aWfChJ4_white-space: pre-wrap;
   --plasmic-mixin-unnamed-style-preset_white-space: var(
     --mixin-8IpQ-aWfChJ4_white-space

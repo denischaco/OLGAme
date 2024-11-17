@@ -55,14 +55,21 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import {
+  executePlasmicDataOp,
+  usePlasmicDataOp,
+  usePlasmicInvalidate
+} from "@plasmicapp/react-web/lib/data-sources";
+
 import { AntdMenu } from "@plasmicpkgs/antd5/skinny/registerMenu";
 import { AntdMenuItem } from "@plasmicpkgs/antd5/skinny/registerMenu";
 import Button from "../../Button"; // plasmic-import: -LisnOPJofcL/component
-import { CmsQueryRepeater } from "@plasmicpkgs/plasmic-cms";
-import Card from "../../Card"; // plasmic-import: AEwQa5n9bvp8/component
-import { CmsRowField } from "@plasmicpkgs/plasmic-cms";
-import BotonLugares from "../../BotonLugares"; // plasmic-import: 4spuvqDqcbmi/component
 import { ParallaxWrapper } from "@plasmicpkgs/react-scroll-parallax";
+import { AntdPagination } from "@plasmicpkgs/antd5/skinny/registerPagination";
+import { paginationHelpers as AntdPagination_Helpers } from "@plasmicpkgs/antd5/skinny/registerPagination";
+import { DataFetcher } from "@plasmicpkgs/plasmic-query";
+import Card from "../../Card"; // plasmic-import: AEwQa5n9bvp8/component
+import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import { useScreenVariants as useScreenVariantseFkgQ5Oo74U } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: e-fkgQ5OO74u/globalVariant
 
@@ -76,9 +83,10 @@ import sty from "./PlasmicHomepage.module.css"; // plasmic-import: 6UL6L3862Hyg/
 import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: 6YQ-s3QiGNsF/icon
 import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: uZPcVb-BA-6n/icon
 import SquareMinusSvgIcon from "./icons/PlasmicIcon__SquareMinusSvg"; // plasmic-import: wFP_NiOwExPb/icon
-import personajesAltoNatijotaPngFrWgai2GciiY from "./images/personajesAltoNatijotaPng.png"; // plasmic-import: FrWgai2GciiY/picture
+import olga4CamNatiPngJkEPnQv6Et89 from "./images/olga4CamNatiPng.png"; // plasmic-import: JkEPnQv6ET89/picture
 import mesaOlgaRemovebgPreviewPngDsAq82Khaq7N from "./images/mesaOlgaRemovebgPreviewPng.png"; // plasmic-import: dsAQ82Khaq7N/picture
 import mesaOlgaJpgG6LPdfZGkZno from "./images/mesaOlgaJpg.jpg"; // plasmic-import: G6lPdfZGkZNO/picture
+import logolgaJpgDTwaEbJjDwkc from "./images/logolgaJpg.jpg"; // plasmic-import: dTWAEbJJDwkc/picture
 
 createPlasmicElementProxy;
 
@@ -87,29 +95,46 @@ export type PlasmicHomepage__VariantsArgs = {};
 type VariantPropType = keyof PlasmicHomepage__VariantsArgs;
 export const PlasmicHomepage__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicHomepage__ArgsType = {};
+export type PlasmicHomepage__ArgsType = {
+  children?: React.ReactNode;
+};
 type ArgPropType = keyof PlasmicHomepage__ArgsType;
-export const PlasmicHomepage__ArgProps = new Array<ArgPropType>();
+export const PlasmicHomepage__ArgProps = new Array<ArgPropType>("children");
 
 export type PlasmicHomepage__OverridesType = {
   root?: Flex__<"div">;
   menu?: Flex__<typeof AntdMenu>;
-  personajes?: Flex__<typeof CmsQueryRepeater>;
-  botonLugares?: Flex__<typeof BotonLugares>;
+  clear?: Flex__<typeof Button>;
+  random?: Flex__<typeof Button>;
+  bt1?: Flex__<"div">;
+  _1?: Flex__<"div">;
+  bt2?: Flex__<"div">;
+  _2?: Flex__<"div">;
+  bt3?: Flex__<"div">;
+  _3?: Flex__<"div">;
+  bt4?: Flex__<"div">;
+  _4?: Flex__<"div">;
+  bt5?: Flex__<"div">;
+  _7?: Flex__<"div">;
+  bt6?: Flex__<"div">;
+  _8?: Flex__<"div">;
+  barra?: Flex__<"section">;
   conductores?: Flex__<"section">;
-  personajesSeleccionados?: Flex__<"div">;
   mesa?: Flex__<"section">;
   mesaza?: Flex__<"div">;
   form?: Flex__<"section">;
   columns?: Flex__<"div">;
   introBloqueShoWs?: Flex__<"section">;
   scrollParallax?: Flex__<typeof ParallaxWrapper>;
-  bloqueShoWs?: Flex__<"section">;
-  programas?: Flex__<typeof CmsQueryRepeater>;
-  link?: Flex__<"a">;
+  programasAir?: Flex__<"section">;
+  pagination?: Flex__<typeof AntdPagination>;
+  airtable?: Flex__<typeof DataFetcher>;
+  programa?: Flex__<typeof Card>;
+  fondoDefecto?: Flex__<"div">;
 };
 
 export interface DefaultHomepageProps {
+  children?: React.ReactNode;
   className?: string;
 }
 
@@ -143,6 +168,9 @@ function PlasmicHomepage__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  let [$queries, setDollarQueries] = React.useState<
+    Record<string, ReturnType<typeof usePlasmicDataOp>>
+  >({});
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -150,6 +178,71 @@ function PlasmicHomepage__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "pagination.currentPage",
+        type: "private",
+        variableType: "number",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return $state.pagination.pageSize;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return 1;
+              }
+              throw e;
+            }
+          })(),
+
+        onMutate: generateOnMutateForSpec("currentPage", AntdPagination_Helpers)
+      },
+      {
+        path: "pagination.pageSize",
+        type: "private",
+        variableType: "number",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return $state.pagination.endIndex;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return 10;
+              }
+              throw e;
+            }
+          })(),
+
+        onMutate: generateOnMutateForSpec("pageSize", AntdPagination_Helpers)
+      },
+      {
+        path: "pagination.startIndex",
+        type: "private",
+        variableType: "number",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        onMutate: generateOnMutateForSpec("startIndex", AntdPagination_Helpers)
+      },
+      {
+        path: "pagination.endIndex",
+        type: "private",
+        variableType: "number",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        onMutate: generateOnMutateForSpec("endIndex", AntdPagination_Helpers)
+      },
+      {
+        path: "unnamedGroupOfVariants",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          $props.unnamedGroupOfVariants
       }
     ],
     [$props, $ctx, $refs]
@@ -157,9 +250,47 @@ function PlasmicHomepage__RenderFunc(props: {
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
-    $queries: {},
+    $queries: $queries,
     $refs
   });
+
+  const new$Queries: Record<string, ReturnType<typeof usePlasmicDataOp>> = {
+    programasAirtable: usePlasmicDataOp(() => {
+      return {
+        sourceId: "ciLjmJy3vCpC5XPTRE4Mpe",
+        opId: "99751c5a-543f-4aa1-a8ed-3eeff42bb036",
+        userArgs: {},
+        cacheKey: `plasmic.$.99751c5a-543f-4aa1-a8ed-3eeff42bb036.$.`,
+        invalidatedKeys: null,
+        roleId: null
+      };
+    }),
+    airprograms: usePlasmicDataOp(() => {
+      return {
+        sourceId: "ciLjmJy3vCpC5XPTRE4Mpe",
+        opId: "3b8b3489-4f90-45b4-b550-70fbd13609b4",
+        userArgs: {},
+        cacheKey: `plasmic.$.3b8b3489-4f90-45b4-b550-70fbd13609b4.$.`,
+        invalidatedKeys: null,
+        roleId: null
+      };
+    }),
+    conductoresAirtable: usePlasmicDataOp(() => {
+      return {
+        sourceId: "ciLjmJy3vCpC5XPTRE4Mpe",
+        opId: "09194b60-e45a-43bd-95d4-bd331be15d17",
+        userArgs: {},
+        cacheKey: `plasmic.$.09194b60-e45a-43bd-95d4-bd331be15d17.$.`,
+        invalidatedKeys: null,
+        roleId: null
+      };
+    })
+  };
+  if (Object.keys(new$Queries).some(k => new$Queries[k] !== $queries[k])) {
+    setDollarQueries(new$Queries);
+
+    $queries = new$Queries;
+  }
 
   const globalVariants = ensureGlobalVariants({
     screen: useScreenVariantseFkgQ5Oo74U()
@@ -189,6 +320,7 @@ function PlasmicHomepage__RenderFunc(props: {
             data-plasmic-override={overrides.menu}
             className={classNames("__wab_instance", sty.menu)}
             mode={"horizontal"}
+            multiple={false}
           >
             <AntdMenuItem
               className={classNames("__wab_instance", sty.menuItem__tDrt8)}
@@ -241,7 +373,7 @@ function PlasmicHomepage__RenderFunc(props: {
                   sty.text__gx50O
                 )}
               >
-                {"CONDUCTORES"}
+                {"ELEGIR CONDUCTORES"}
               </div>
             </AntdMenuItem>
             <AntdMenuItem
@@ -347,262 +479,471 @@ function PlasmicHomepage__RenderFunc(props: {
               <section
                 className={classNames(projectcss.all, sty.section__pLc4)}
               >
-                <Button
-                  className={classNames("__wab_instance", sty.button__dv1Pw)}
-                >
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text___2SYho
-                    )}
+                <div className={classNames(projectcss.all, sty.freeBox__mr2V2)}>
+                  <Button
+                    data-plasmic-name={"clear"}
+                    data-plasmic-override={overrides.clear}
+                    className={classNames("__wab_instance", sty.clear)}
+                    endIcon={
+                      <IconIcon
+                        className={classNames(projectcss.all, sty.svg__q0Fjp)}
+                        role={"img"}
+                      />
+                    }
+                    shape={"sharp"}
+                    size={"compact"}
                   >
-                    {"limpiar seleccionados"}
-                  </div>
-                </Button>
-              </section>
-              <CmsQueryRepeater
-                data-plasmic-name={"personajes"}
-                data-plasmic-override={overrides.personajes}
-                className={classNames("__wab_instance", sty.personajes)}
-                desc={false}
-                emptyMessage={
-                  <DataCtxReader__>
-                    {$ctx => (
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text___4MDzJ
-                        )}
-                      >
-                        {"No matching published entries found."}
-                      </div>
-                    )}
-                  </DataCtxReader__>
-                }
-                forceEmptyState={false}
-                forceLoadingState={false}
-                limit={0}
-                loadingMessage={
-                  <DataCtxReader__>
-                    {$ctx => (
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text___4JcSy
-                        )}
-                      >
-                        {"Loading..."}
-                      </div>
-                    )}
-                  </DataCtxReader__>
-                }
-                noAutoRepeat={false}
-                noLayout={false}
-                orderBy={"nombre"}
-                table={"personajes"}
-                useDraft={false}
-              >
-                <DataCtxReader__>
-                  {$ctx => (
                     <div
-                      className={classNames(projectcss.all, sty.freeBox__ld7LB)}
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text___2SYho
+                      )}
                     >
-                      <Card
-                        className={classNames(
-                          "__wab_instance",
-                          sty.card__rxMBj
-                        )}
-                        title={
-                          <CmsRowField
-                            className={classNames(
-                              "__wab_instance",
-                              sty.cmsEntryField___0PISo
-                            )}
-                            themeResetClassName={classNames(
-                              projectcss.root_reset,
-                              projectcss.root_reset_tags,
-                              projectcss.plasmic_default_styles,
-                              projectcss.plasmic_mixins,
-                              projectcss.plasmic_tokens,
-                              plasmic_antd_5_hostless_css.plasmic_tokens,
-                              plasmic_plasmic_rich_components_css.plasmic_tokens
-                            )}
-                          />
+                      {"limpiar seleccionados"}
+                    </div>
+                  </Button>
+                  <Button
+                    data-plasmic-name={"random"}
+                    data-plasmic-override={overrides.random}
+                    className={classNames("__wab_instance", sty.random)}
+                    endIcon={
+                      <IconIcon
+                        className={classNames(projectcss.all, sty.svg__eFuDq)}
+                        role={"img"}
+                      />
+                    }
+                  >
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__xc0Yz
+                      )}
+                    >
+                      {"asignar aleatoriamente"}
+                    </div>
+                  </Button>
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__cafUc)}
+                  >
+                    {(() => {
+                      try {
+                        return true;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return true;
                         }
-                      >
-                        <PlasmicImg__
-                          alt={""}
-                          className={classNames(sty.img__mP2JO)}
-                          displayHeight={"112px"}
-                          displayMaxHeight={"none"}
-                          displayMaxWidth={"100%"}
-                          displayMinHeight={"0"}
-                          displayMinWidth={"0"}
-                          displayWidth={"235px"}
-                          loading={"lazy"}
-                          src={(() => {
+                        throw e;
+                      }
+                    })()
+                      ? (_par =>
+                          !_par ? [] : Array.isArray(_par) ? _par : [_par])(
+                          (() => {
                             try {
-                              return $ctx.plasmicCmsPersonajesItem.data.imagen
-                                .url;
+                              return $queries.conductoresAirtable.data;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
                                 e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
-                                return undefined;
+                                return [];
                               }
                               throw e;
                             }
-                          })()}
-                        />
-                      </Card>
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__kqn7M
-                        )}
-                      >
-                        <Stack__
-                          as={"div"}
-                          hasGap={true}
-                          className={classNames(
-                            projectcss.all,
-                            sty.freeBox__bKbDc
-                          )}
-                        >
-                          {(_par =>
-                            !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                            (() => {
-                              try {
-                                return [1, 2, 3, 4];
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return [];
+                          })()
+                        ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                          const currentItem = __plasmic_item_0;
+                          const currentIndex = __plasmic_idx_0;
+                          return (
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                sty.freeBox__fdQhK
+                              )}
+                              key={currentIndex}
+                            >
+                              {(() => {
+                                try {
+                                  return currentItem.AVATAR[0].url;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return true;
+                                  }
+                                  throw e;
                                 }
-                                throw e;
-                              }
-                            })()
-                          ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                            const currentItem = __plasmic_item_0;
-                            const currentIndex = __plasmic_idx_0;
-                            return (
-                              <BotonLugares
-                                data-plasmic-name={"botonLugares"}
-                                data-plasmic-override={overrides.botonLugares}
-                                className={classNames(
-                                  "__wab_instance",
-                                  sty.botonLugares
-                                )}
-                                key={currentIndex}
-                              />
-                            );
-                          })}
-                        </Stack__>
-                      </div>
-                    </div>
-                  )}
-                </DataCtxReader__>
-              </CmsQueryRepeater>
+                              })() ? (
+                                <PlasmicImg__
+                                  alt={""}
+                                  className={classNames(sty.img__eaRh)}
+                                  displayHeight={"auto"}
+                                  displayMaxHeight={"none"}
+                                  displayMaxWidth={"100%"}
+                                  displayMinHeight={"0"}
+                                  displayMinWidth={"0"}
+                                  displayWidth={"56px"}
+                                  loading={"lazy"}
+                                  src={(() => {
+                                    try {
+                                      return currentItem.AVATAR[0].url;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()}
+                                />
+                              ) : null}
+                              {(() => {
+                                try {
+                                  return (
+                                    $queries.conductoresAirtable.data[
+                                      currentIndex
+                                    ].AVATAR[0].url != undefined
+                                  );
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return true;
+                                  }
+                                  throw e;
+                                }
+                              })() ? (
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.freeBox__w5J
+                                  )}
+                                >
+                                  <div
+                                    data-plasmic-name={"bt1"}
+                                    data-plasmic-override={overrides.bt1}
+                                    className={classNames(
+                                      projectcss.all,
+                                      sty.bt1
+                                    )}
+                                  >
+                                    <Button
+                                      className={classNames(
+                                        "__wab_instance",
+                                        sty.button___6FpWr
+                                      )}
+                                    >
+                                      <div
+                                        data-plasmic-name={"_1"}
+                                        data-plasmic-override={overrides._1}
+                                        className={classNames(
+                                          projectcss.all,
+                                          projectcss.__wab_text,
+                                          sty._1
+                                        )}
+                                      >
+                                        {"1"}
+                                      </div>
+                                    </Button>
+                                  </div>
+                                  <div
+                                    data-plasmic-name={"bt2"}
+                                    data-plasmic-override={overrides.bt2}
+                                    className={classNames(
+                                      projectcss.all,
+                                      sty.bt2
+                                    )}
+                                  >
+                                    <Button
+                                      className={classNames(
+                                        "__wab_instance",
+                                        sty.button__mVsnt
+                                      )}
+                                    >
+                                      <div
+                                        data-plasmic-name={"_2"}
+                                        data-plasmic-override={overrides._2}
+                                        className={classNames(
+                                          projectcss.all,
+                                          projectcss.__wab_text,
+                                          sty._2
+                                        )}
+                                      >
+                                        {"2"}
+                                      </div>
+                                    </Button>
+                                  </div>
+                                  <div
+                                    data-plasmic-name={"bt3"}
+                                    data-plasmic-override={overrides.bt3}
+                                    className={classNames(
+                                      projectcss.all,
+                                      sty.bt3
+                                    )}
+                                  >
+                                    <Button
+                                      className={classNames(
+                                        "__wab_instance",
+                                        sty.button___1Lexd
+                                      )}
+                                    >
+                                      <div
+                                        data-plasmic-name={"_3"}
+                                        data-plasmic-override={overrides._3}
+                                        className={classNames(
+                                          projectcss.all,
+                                          projectcss.__wab_text,
+                                          sty._3
+                                        )}
+                                      >
+                                        {"3"}
+                                      </div>
+                                    </Button>
+                                  </div>
+                                  <div
+                                    data-plasmic-name={"bt4"}
+                                    data-plasmic-override={overrides.bt4}
+                                    className={classNames(
+                                      projectcss.all,
+                                      sty.bt4
+                                    )}
+                                  >
+                                    <Button
+                                      className={classNames(
+                                        "__wab_instance",
+                                        sty.button__qawad
+                                      )}
+                                    >
+                                      <div
+                                        data-plasmic-name={"_4"}
+                                        data-plasmic-override={overrides._4}
+                                        className={classNames(
+                                          projectcss.all,
+                                          projectcss.__wab_text,
+                                          sty._4
+                                        )}
+                                      >
+                                        {"4"}
+                                      </div>
+                                    </Button>
+                                  </div>
+                                  <div
+                                    data-plasmic-name={"bt5"}
+                                    data-plasmic-override={overrides.bt5}
+                                    className={classNames(
+                                      projectcss.all,
+                                      sty.bt5
+                                    )}
+                                  >
+                                    <Button
+                                      className={classNames(
+                                        "__wab_instance",
+                                        sty.button__xctIr
+                                      )}
+                                    >
+                                      <div
+                                        data-plasmic-name={"_7"}
+                                        data-plasmic-override={overrides._7}
+                                        className={classNames(
+                                          projectcss.all,
+                                          projectcss.__wab_text,
+                                          sty._7
+                                        )}
+                                      >
+                                        {"5"}
+                                      </div>
+                                    </Button>
+                                  </div>
+                                  <div
+                                    data-plasmic-name={"bt6"}
+                                    data-plasmic-override={overrides.bt6}
+                                    className={classNames(
+                                      projectcss.all,
+                                      sty.bt6
+                                    )}
+                                  >
+                                    <Button
+                                      className={classNames(
+                                        "__wab_instance",
+                                        sty.button__aVmlC
+                                      )}
+                                    >
+                                      <div
+                                        data-plasmic-name={"_8"}
+                                        data-plasmic-override={overrides._8}
+                                        className={classNames(
+                                          projectcss.all,
+                                          projectcss.__wab_text,
+                                          sty._8
+                                        )}
+                                      >
+                                        {"6"}
+                                      </div>
+                                    </Button>
+                                  </div>
+                                </div>
+                              ) : null}
+                            </div>
+                          );
+                        })
+                      : null}
+                  </div>
+                </div>
+              </section>
             </div>
           ) : null}
+          <section
+            data-plasmic-name={"barra"}
+            data-plasmic-override={overrides.barra}
+            className={classNames(projectcss.all, sty.barra)}
+          />
+
           <section
             data-plasmic-name={"conductores"}
             data-plasmic-override={overrides.conductores}
             className={classNames(projectcss.all, sty.conductores)}
           >
-            <Stack__
-              as={"div"}
-              data-plasmic-name={"personajesSeleccionados"}
-              data-plasmic-override={overrides.personajesSeleccionados}
-              hasGap={true}
-              className={classNames(
-                projectcss.all,
-                sty.personajesSeleccionados
-              )}
-            >
-              <div className={classNames(projectcss.all, sty.column___4D8Jd)}>
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__iSI1)}
-                  displayHeight={"auto"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"100%"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"auto"}
-                  loading={"lazy"}
-                  src={{
-                    src: personajesAltoNatijotaPngFrWgai2GciiY,
-                    fullWidth: 209,
-                    fullHeight: 382,
-                    aspectRatio: undefined
-                  }}
-                />
+            <div className={classNames(projectcss.all, sty.freeBox__uaXb0)}>
+              <div className={classNames(projectcss.all, sty.freeBox__b8Ps0)}>
+                <div
+                  className={classNames(projectcss.all, sty.freeBox___4EIhX)}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__uHvP)}
+                    displayHeight={
+                      hasVariant(globalVariants, "screen", "tablet")
+                        ? "176px"
+                        : "auto"
+                    }
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={
+                      hasVariant(globalVariants, "screen", "tablet")
+                        ? "321px"
+                        : "auto"
+                    }
+                    loading={"lazy"}
+                    src={{
+                      src: olga4CamNatiPngJkEPnQv6Et89,
+                      fullWidth: 604,
+                      fullHeight: 332,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+                <div className={classNames(projectcss.all, sty.freeBox__gq5Za)}>
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__cfR3Q)}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: olga4CamNatiPngJkEPnQv6Et89,
+                      fullWidth: 604,
+                      fullHeight: 332,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+                <div className={classNames(projectcss.all, sty.freeBox__taosf)}>
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__sMCs4)}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: olga4CamNatiPngJkEPnQv6Et89,
+                      fullWidth: 604,
+                      fullHeight: 332,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+                <div className={classNames(projectcss.all, sty.freeBox__eyVk2)}>
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__cmmij)}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: olga4CamNatiPngJkEPnQv6Et89,
+                      fullWidth: 604,
+                      fullHeight: 332,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+                <div
+                  className={classNames(projectcss.all, sty.freeBox___30C6A)}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__cGQcz)}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: olga4CamNatiPngJkEPnQv6Et89,
+                      fullWidth: 604,
+                      fullHeight: 332,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+                <div className={classNames(projectcss.all, sty.freeBox__k1Ae)}>
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__x7Rl8)}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: olga4CamNatiPngJkEPnQv6Et89,
+                      fullWidth: 604,
+                      fullHeight: 332,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
               </div>
-              <div className={classNames(projectcss.all, sty.column__woQpW)}>
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__k4P7Z)}
-                  displayHeight={"auto"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"100%"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"auto"}
-                  loading={"lazy"}
-                  src={{
-                    src: personajesAltoNatijotaPngFrWgai2GciiY,
-                    fullWidth: 209,
-                    fullHeight: 382,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-              <div className={classNames(projectcss.all, sty.column__fs51B)}>
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__avIuy)}
-                  displayHeight={"auto"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"100%"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"auto"}
-                  loading={"lazy"}
-                  src={{
-                    src: personajesAltoNatijotaPngFrWgai2GciiY,
-                    fullWidth: 209,
-                    fullHeight: 382,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-              <div className={classNames(projectcss.all, sty.column__fmVdZ)}>
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__fGjly)}
-                  displayHeight={"auto"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"100%"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"auto"}
-                  loading={"lazy"}
-                  src={{
-                    src: personajesAltoNatijotaPngFrWgai2GciiY,
-                    fullWidth: 209,
-                    fullHeight: 382,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-            </Stack__>
+            </div>
           </section>
           <section
             data-plasmic-name={"mesa"}
@@ -636,7 +977,7 @@ function PlasmicHomepage__RenderFunc(props: {
                       ? "436px"
                       : hasVariant(globalVariants, "screen", "tablet")
                       ? "603px"
-                      : "auto"
+                      : "1376px"
                   }
                   loading={"lazy"}
                   src={{
@@ -692,6 +1033,28 @@ function PlasmicHomepage__RenderFunc(props: {
                       {"SUCEDI\u00d3 ALGUNA VEZ"}
                     </div>
                   </Button>
+                  <Button
+                    className={classNames("__wab_instance", sty.button__mbj43)}
+                    color={"blue"}
+                    shape={"rounded"}
+                    showStartIcon={true}
+                    startIcon={
+                      <CheckSvgIcon
+                        className={classNames(projectcss.all, sty.svg__keVl)}
+                        role={"img"}
+                      />
+                    }
+                  >
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__dOoBh
+                      )}
+                    >
+                      {"(x3) EN ESE ORDEN"}
+                    </div>
+                  </Button>
                 </div>
                 <div className={classNames(projectcss.all, sty.column__li2H)}>
                   <Button
@@ -713,9 +1076,20 @@ function PlasmicHomepage__RenderFunc(props: {
                         sty.text__vkY7
                       )}
                     >
-                      {"NUNCA SUCEDI\u00d3"}
+                      {"(x2) NUNCA* SUCEDI\u00d3"}
                     </div>
                   </Button>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__e3Oju
+                    )}
+                  >
+                    {
+                      "*HASTA EL 13 DE NOVIEMBRE DE 2024\nEN 1158 VIDEOS DE YOUTUBE"
+                    }
+                  </div>
                 </div>
               </div>
             </section>
@@ -735,7 +1109,7 @@ function PlasmicHomepage__RenderFunc(props: {
               <PlasmicImg__
                 alt={""}
                 className={classNames(sty.img___2B3X5)}
-                displayHeight={"915px"}
+                displayHeight={"1032px"}
                 displayMaxHeight={"none"}
                 displayMaxWidth={"100%"}
                 displayMinHeight={"0"}
@@ -762,48 +1136,165 @@ function PlasmicHomepage__RenderFunc(props: {
             </ParallaxWrapper>
           </section>
           <section
-            data-plasmic-name={"bloqueShoWs"}
-            data-plasmic-override={overrides.bloqueShoWs}
-            className={classNames(projectcss.all, sty.bloqueShoWs)}
+            data-plasmic-name={"programasAir"}
+            data-plasmic-override={overrides.programasAir}
+            className={classNames(projectcss.all, sty.programasAir)}
           >
-            <CmsQueryRepeater
-              data-plasmic-name={"programas"}
-              data-plasmic-override={overrides.programas}
-              className={classNames("__wab_instance", sty.programas)}
-              desc={false}
-              emptyMessage={null}
-              forceEmptyState={false}
-              forceLoadingState={false}
-              limit={0}
-              loadingMessage={
+            <div className={classNames(projectcss.all, sty.freeBox__roNog)}>
+              {(() => {
+                const child$Props = {
+                  className: classNames("__wab_instance", sty.pagination),
+                  current: generateStateValueProp($state, [
+                    "pagination",
+                    "currentPage"
+                  ]),
+                  defaultCurrent: (() => {
+                    try {
+                      return $state.pagination.pageSize;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return 1;
+                      }
+                      throw e;
+                    }
+                  })(),
+                  defaultPageSize: (() => {
+                    try {
+                      return $state.pagination.endIndex;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return 10;
+                      }
+                      throw e;
+                    }
+                  })(),
+                  disabled: false,
+                  onChange: async (...eventArgs: any) => {
+                    generateStateOnChangePropForCodeComponents(
+                      $state,
+                      "currentPage",
+                      ["pagination", "currentPage"],
+                      AntdPagination_Helpers
+                    ).apply(null, eventArgs);
+                    generateStateOnChangePropForCodeComponents(
+                      $state,
+                      "startIndex",
+                      ["pagination", "startIndex"],
+                      AntdPagination_Helpers
+                    ).apply(null, eventArgs);
+                    generateStateOnChangePropForCodeComponents(
+                      $state,
+                      "endIndex",
+                      ["pagination", "endIndex"],
+                      AntdPagination_Helpers
+                    ).apply(null, eventArgs);
+                  },
+                  onShowSizeChange: generateStateOnChangePropForCodeComponents(
+                    $state,
+                    "pageSize",
+                    ["pagination", "pageSize"],
+                    AntdPagination_Helpers
+                  ),
+                  pageSize: generateStateValueProp($state, [
+                    "pagination",
+                    "pageSize"
+                  ]),
+                  pageSizeOptions: [
+                    { pageSize: 10 },
+                    { pageSize: 20 },
+                    { pageSize: 50 },
+                    { pageSize: 100 }
+                  ],
+                  simple: true,
+                  size: "small",
+                  total: (() => {
+                    try {
+                      return $state.pagination.endIndex;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()
+                };
+                initializeCodeComponentStates(
+                  $state,
+                  [
+                    {
+                      name: "currentPage",
+                      plasmicStateName: "pagination.currentPage"
+                    },
+                    {
+                      name: "pageSize",
+                      plasmicStateName: "pagination.pageSize"
+                    },
+                    {
+                      name: "startIndex",
+                      plasmicStateName: "pagination.startIndex"
+                    },
+                    {
+                      name: "endIndex",
+                      plasmicStateName: "pagination.endIndex"
+                    }
+                  ],
+                  [],
+                  AntdPagination_Helpers ?? {},
+                  child$Props
+                );
+
+                return (
+                  <AntdPagination
+                    data-plasmic-name={"pagination"}
+                    data-plasmic-override={overrides.pagination}
+                    {...child$Props}
+                  />
+                );
+              })()}
+              <DataFetcher
+                data-plasmic-name={"airtable"}
+                data-plasmic-override={overrides.airtable}
+                className={classNames("__wab_instance", sty.airtable)}
+                dataName={"fetchedData"}
+                errorDisplay={
+                  <DataCtxReader__>
+                    {$ctx => "Error fetching data"}
+                  </DataCtxReader__>
+                }
+                errorName={"fetchError"}
+                headers={{
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                  Authorization:
+                    "Bearer patIgGHjjrlZmFYBY.c191c8ec1f5bc17bd9c4055d30516bc40021de79cee429399b118c89dcf34fdc"
+                }}
+                loadingDisplay={
+                  <DataCtxReader__>{$ctx => "Loading..."}</DataCtxReader__>
+                }
+                method={"GET"}
+                noLayout={false}
+                previewErrorDisplay={false}
+                previewSpinner={false}
+                url={"https://api.airtable.com/v0/appu7BR9hZRtx80HC/PROGRAMAS?"}
+              >
                 <DataCtxReader__>
-                  {$ctx => (
-                    <div
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.__wab_text,
-                        sty.text__tmhXk
-                      )}
-                    >
-                      {"Loading..."}
-                    </div>
-                  )}
-                </DataCtxReader__>
-              }
-              noAutoRepeat={false}
-              noLayout={false}
-              useDraft={false}
-            >
-              <DataCtxReader__>
-                {$ctx => (
-                  <div
-                    className={classNames(projectcss.all, sty.freeBox__j0OJi)}
-                  >
-                    {(_par =>
+                  {$ctx =>
+                    (_par =>
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                       (() => {
                         try {
-                          return $ctx.plasmicCmsTableSchema.fields;
+                          return $ctx.fetchedData.records.sort(
+                            (a, b) => a.fields.ID_UNIQUE2 - b.fields.ID_UNIQUE2
+                          );
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -815,84 +1306,195 @@ function PlasmicHomepage__RenderFunc(props: {
                         }
                       })()
                     ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                      const currentItem = __plasmic_item_0;
-                      const currentIndex = __plasmic_idx_0;
+                      const currentItemP = __plasmic_item_0;
+                      const currentIndexP = __plasmic_idx_0;
                       return (
                         <Card
-                          className={classNames(
-                            "__wab_instance",
-                            sty.card__flhDh
-                          )}
-                          key={currentIndex}
+                          data-plasmic-name={"programa"}
+                          data-plasmic-override={overrides.programa}
+                          className={classNames("__wab_instance", sty.programa)}
+                          key={currentIndexP}
                           title={
-                            <CmsRowField
-                              className={classNames(
-                                "__wab_instance",
-                                sty.cmsEntryField__luhR
-                              )}
-                              themeResetClassName={classNames(
-                                projectcss.root_reset,
-                                projectcss.root_reset_tags,
-                                projectcss.plasmic_default_styles,
-                                projectcss.plasmic_mixins,
-                                projectcss.plasmic_tokens,
-                                plasmic_antd_5_hostless_css.plasmic_tokens,
-                                plasmic_plasmic_rich_components_css.plasmic_tokens
-                              )}
-                            />
+                            <React.Fragment>
+                              {(() => {
+                                try {
+                                  return (
+                                    currentItemP.fields.PORTADA != undefined
+                                  );
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return true;
+                                  }
+                                  throw e;
+                                }
+                              })() ? (
+                                <div
+                                  data-plasmic-name={"fondoDefecto"}
+                                  data-plasmic-override={overrides.fondoDefecto}
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.fondoDefecto
+                                  )}
+                                >
+                                  <PlasmicImg__
+                                    alt={"_"}
+                                    className={classNames(sty.img__hmIFk)}
+                                    displayHeight={"auto"}
+                                    displayMaxHeight={"none"}
+                                    displayMaxWidth={"100%"}
+                                    displayMinHeight={"0"}
+                                    displayMinWidth={"0"}
+                                    displayWidth={"auto"}
+                                    height={"138"}
+                                    loading={"lazy"}
+                                    src={(() => {
+                                      try {
+                                        return currentItemP.fields.PORTADA;
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return {
+                                            src: logolgaJpgDTwaEbJjDwkc,
+                                            fullWidth: 900,
+                                            fullHeight: 900,
+                                            aspectRatio: undefined
+                                          };
+                                        }
+                                        throw e;
+                                      }
+                                    })()}
+                                    width={"246"}
+                                  />
+                                </div>
+                              ) : null}
+                              <div
+                                className={classNames(
+                                  projectcss.all,
+                                  sty.freeBox__dHFz
+                                )}
+                              >
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.__wab_text,
+                                    sty.text__ihQx8
+                                  )}
+                                >
+                                  <div
+                                    className={projectcss.__wab_expr_html_text}
+                                    dangerouslySetInnerHTML={{
+                                      __html: (() => {
+                                        try {
+                                          return currentItemP.fields.TITULO;
+                                        } catch (e) {
+                                          if (
+                                            e instanceof TypeError ||
+                                            e?.plasmicType ===
+                                              "PlasmicUndefinedDataError"
+                                          ) {
+                                            return "Card title";
+                                          }
+                                          throw e;
+                                        }
+                                      })()
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </React.Fragment>
                           }
                         >
-                          <CmsRowField
-                            className={classNames(
-                              "__wab_instance",
-                              sty.cmsEntryField__hGukd
-                            )}
-                            dateFormat={"dddd, MMMM D, YYYY"}
-                            field={"fecha"}
-                            themeResetClassName={classNames(
-                              projectcss.root_reset,
-                              projectcss.root_reset_tags,
-                              projectcss.plasmic_default_styles,
-                              projectcss.plasmic_mixins,
-                              projectcss.plasmic_tokens,
-                              plasmic_antd_5_hostless_css.plasmic_tokens,
-                              plasmic_plasmic_rich_components_css.plasmic_tokens
-                            )}
-                          />
-
-                          <PlasmicLink__
-                            data-plasmic-name={"link"}
-                            data-plasmic-override={overrides.link}
+                          <div
                             className={classNames(
                               projectcss.all,
-                              projectcss.a,
-                              projectcss.__wab_text,
-                              sty.link
+                              sty.freeBox__o91OQ
                             )}
-                            href={(() => {
-                              try {
-                                return currentIndex;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return "https://www.plasmic.app/";
-                                }
-                                throw e;
-                              }
-                            })()}
-                            platform={"react"}
                           >
-                            {"VER CAPITULO"}
-                          </PlasmicLink__>
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                sty.freeBox__vcCfK
+                              )}
+                            >
+                              {renderPlasmicSlot({
+                                defaultContents: (
+                                  <Button
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.button__xpBgs
+                                    )}
+                                    link={(() => {
+                                      try {
+                                        return (
+                                          "https://www.youtube.com/watch?v=" +
+                                          currentItemP.fields.v
+                                        );
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
+                                        }
+                                        throw e;
+                                      }
+                                    })()}
+                                    target={true}
+                                  >
+                                    <div
+                                      className={classNames(
+                                        projectcss.all,
+                                        projectcss.__wab_text,
+                                        sty.text__hNElI
+                                      )}
+                                    >
+                                      {"Ver Programa"}
+                                    </div>
+                                  </Button>
+                                ),
+                                value: args.children
+                              })}
+                            </div>
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__nqHtz
+                              )}
+                            >
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return currentItemP.fields.SHOW;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "something here";
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              </React.Fragment>
+                            </div>
+                          </div>
                         </Card>
                       );
-                    })}
-                  </div>
-                )}
-              </DataCtxReader__>
-            </CmsQueryRepeater>
+                    })
+                  }
+                </DataCtxReader__>
+              </DataFetcher>
+            </div>
           </section>
         </div>
       </div>
@@ -904,34 +1506,68 @@ const PlasmicDescendants = {
   root: [
     "root",
     "menu",
-    "personajes",
-    "botonLugares",
+    "clear",
+    "random",
+    "bt1",
+    "_1",
+    "bt2",
+    "_2",
+    "bt3",
+    "_3",
+    "bt4",
+    "_4",
+    "bt5",
+    "_7",
+    "bt6",
+    "_8",
+    "barra",
     "conductores",
-    "personajesSeleccionados",
     "mesa",
     "mesaza",
     "form",
     "columns",
     "introBloqueShoWs",
     "scrollParallax",
-    "bloqueShoWs",
-    "programas",
-    "link"
+    "programasAir",
+    "pagination",
+    "airtable",
+    "programa",
+    "fondoDefecto"
   ],
   menu: ["menu"],
-  personajes: ["personajes", "botonLugares"],
-  botonLugares: ["botonLugares"],
-  conductores: ["conductores", "personajesSeleccionados"],
-  personajesSeleccionados: ["personajesSeleccionados"],
+  clear: ["clear"],
+  random: ["random"],
+  bt1: ["bt1", "_1"],
+  _1: ["_1"],
+  bt2: ["bt2", "_2"],
+  _2: ["_2"],
+  bt3: ["bt3", "_3"],
+  _3: ["_3"],
+  bt4: ["bt4", "_4"],
+  _4: ["_4"],
+  bt5: ["bt5", "_7"],
+  _7: ["_7"],
+  bt6: ["bt6", "_8"],
+  _8: ["_8"],
+  barra: ["barra"],
+  conductores: ["conductores"],
   mesa: ["mesa", "mesaza"],
   mesaza: ["mesaza"],
   form: ["form", "columns"],
   columns: ["columns"],
   introBloqueShoWs: ["introBloqueShoWs", "scrollParallax"],
   scrollParallax: ["scrollParallax"],
-  bloqueShoWs: ["bloqueShoWs", "programas", "link"],
-  programas: ["programas", "link"],
-  link: ["link"]
+  programasAir: [
+    "programasAir",
+    "pagination",
+    "airtable",
+    "programa",
+    "fondoDefecto"
+  ],
+  pagination: ["pagination"],
+  airtable: ["airtable", "programa", "fondoDefecto"],
+  programa: ["programa", "fondoDefecto"],
+  fondoDefecto: ["fondoDefecto"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -939,19 +1575,33 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   menu: typeof AntdMenu;
-  personajes: typeof CmsQueryRepeater;
-  botonLugares: typeof BotonLugares;
+  clear: typeof Button;
+  random: typeof Button;
+  bt1: "div";
+  _1: "div";
+  bt2: "div";
+  _2: "div";
+  bt3: "div";
+  _3: "div";
+  bt4: "div";
+  _4: "div";
+  bt5: "div";
+  _7: "div";
+  bt6: "div";
+  _8: "div";
+  barra: "section";
   conductores: "section";
-  personajesSeleccionados: "div";
   mesa: "section";
   mesaza: "div";
   form: "section";
   columns: "div";
   introBloqueShoWs: "section";
   scrollParallax: typeof ParallaxWrapper;
-  bloqueShoWs: "section";
-  programas: typeof CmsQueryRepeater;
-  link: "a";
+  programasAir: "section";
+  pagination: typeof AntdPagination;
+  airtable: typeof DataFetcher;
+  programa: typeof Card;
+  fondoDefecto: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1015,19 +1665,33 @@ export const PlasmicHomepage = Object.assign(
   {
     // Helper components rendering sub-elements
     menu: makeNodeComponent("menu"),
-    personajes: makeNodeComponent("personajes"),
-    botonLugares: makeNodeComponent("botonLugares"),
+    clear: makeNodeComponent("clear"),
+    random: makeNodeComponent("random"),
+    bt1: makeNodeComponent("bt1"),
+    _1: makeNodeComponent("_1"),
+    bt2: makeNodeComponent("bt2"),
+    _2: makeNodeComponent("_2"),
+    bt3: makeNodeComponent("bt3"),
+    _3: makeNodeComponent("_3"),
+    bt4: makeNodeComponent("bt4"),
+    _4: makeNodeComponent("_4"),
+    bt5: makeNodeComponent("bt5"),
+    _7: makeNodeComponent("_7"),
+    bt6: makeNodeComponent("bt6"),
+    _8: makeNodeComponent("_8"),
+    barra: makeNodeComponent("barra"),
     conductores: makeNodeComponent("conductores"),
-    personajesSeleccionados: makeNodeComponent("personajesSeleccionados"),
     mesa: makeNodeComponent("mesa"),
     mesaza: makeNodeComponent("mesaza"),
     form: makeNodeComponent("form"),
     columns: makeNodeComponent("columns"),
     introBloqueShoWs: makeNodeComponent("introBloqueShoWs"),
     scrollParallax: makeNodeComponent("scrollParallax"),
-    bloqueShoWs: makeNodeComponent("bloqueShoWs"),
-    programas: makeNodeComponent("programas"),
-    link: makeNodeComponent("link"),
+    programasAir: makeNodeComponent("programasAir"),
+    pagination: makeNodeComponent("pagination"),
+    airtable: makeNodeComponent("airtable"),
+    programa: makeNodeComponent("programa"),
+    fondoDefecto: makeNodeComponent("fondoDefecto"),
 
     // Metadata about props expected for PlasmicHomepage
     internalVariantProps: PlasmicHomepage__VariantProps,

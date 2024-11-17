@@ -9,6 +9,7 @@
     "@plasmicapp/react-web": "^0.2.354",
     "@plasmicpkgs/antd5": "^0.0.254",
     "@plasmicpkgs/plasmic-cms": "^0.0.271",
+    "@plasmicpkgs/plasmic-query": "^0.0.225",
     "@plasmicpkgs/plasmic-rich-components": "^1.0.197",
     "@plasmicpkgs/react-awesome-reveal": "^3.8.209",
     "@plasmicpkgs/react-scroll-parallax": "^0.0.214",

@@ -93,6 +93,7 @@ export type PlasmicCheckbox__ArgsType = {
   "aria-label"?: string;
   "aria-labelledby"?: string;
   onChange?: (isChecked: boolean) => void;
+  slot?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicCheckbox__ArgsType;
 export const PlasmicCheckbox__ArgProps = new Array<ArgPropType>(
@@ -101,7 +102,8 @@ export const PlasmicCheckbox__ArgProps = new Array<ArgPropType>(
   "value",
   "aria-label",
   "aria-labelledby",
-  "onChange"
+  "onChange",
+  "slot"
 );
 
 export type PlasmicCheckbox__OverridesType = {
@@ -114,6 +116,7 @@ export interface DefaultCheckboxProps extends pp.CheckboxProps {
   "aria-label"?: string;
   "aria-labelledby"?: string;
   onChange?: (isChecked: boolean) => void;
+  slot?: React.ReactNode;
 }
 
 const $$ = {};
@@ -241,8 +244,12 @@ function PlasmicCheckbox__RenderFunc(props: {
           ),
           [sty.freeBoxnoLabel]: hasVariant($state, "noLabel", "noLabel")
         })}
-      />
-
+      >
+        {renderPlasmicSlot({
+          defaultContents: null,
+          value: args.slot
+        })}
+      </div>
       {(hasVariant($state, "noLabel", "noLabel") ? false : true) ? (
         <div
           data-plasmic-name={"labelContainer"}
