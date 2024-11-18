@@ -66,7 +66,7 @@ import { RichDetails } from "@plasmicpkgs/plasmic-rich-components/skinny/rich-de
 import { AntdMenu } from "@plasmicpkgs/antd5/skinny/registerMenu";
 import { AntdMenuItem } from "@plasmicpkgs/antd5/skinny/registerMenu";
 import Button from "../../Button"; // plasmic-import: -LisnOPJofcL/component
-import { ParallaxWrapper } from "@plasmicpkgs/react-scroll-parallax";
+import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import { AntdPagination } from "@plasmicpkgs/antd5/skinny/registerPagination";
 import { paginationHelpers as AntdPagination_Helpers } from "@plasmicpkgs/antd5/skinny/registerPagination";
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
@@ -86,8 +86,6 @@ import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: 6YQ-s3QiGNs
 import CheckSvgIcon from "./icons/PlasmicIcon__CheckSvg"; // plasmic-import: uZPcVb-BA-6n/icon
 import SquareMinusSvgIcon from "./icons/PlasmicIcon__SquareMinusSvg"; // plasmic-import: wFP_NiOwExPb/icon
 import olga4CamNatiPngJkEPnQv6Et89 from "./images/olga4CamNatiPng.png"; // plasmic-import: JkEPnQv6ET89/picture
-import mesaOlgaRemovebgPreviewPngDsAq82Khaq7N from "./images/mesaOlgaRemovebgPreviewPng.png"; // plasmic-import: dsAQ82Khaq7N/picture
-import mesaOlgaJpgG6LPdfZGkZno from "./images/mesaOlgaJpg.jpg"; // plasmic-import: G6lPdfZGkZNO/picture
 import logolgaJpgDTwaEbJjDwkc from "./images/logolgaJpg.jpg"; // plasmic-import: dTWAEbJJDwkc/picture
 
 createPlasmicElementProxy;
@@ -109,6 +107,7 @@ export type PlasmicHomepage__OverridesType = {
   dataDetails?: Flex__<typeof RichDetails>;
   tusJugadas?: Flex__<"div">;
   menu?: Flex__<typeof AntdMenu>;
+  section?: Flex__<"section">;
   clear?: Flex__<typeof Button>;
   bt1?: Flex__<"div">;
   _1?: Flex__<"div">;
@@ -124,12 +123,11 @@ export type PlasmicHomepage__OverridesType = {
   _8?: Flex__<"div">;
   barra?: Flex__<"section">;
   conductores?: Flex__<"section">;
-  mesa?: Flex__<"section">;
-  mesaza?: Flex__<"div">;
   form?: Flex__<"section">;
+  botones?: Flex__<"section">;
   columns?: Flex__<"div">;
   introBloqueShoWs?: Flex__<"section">;
-  scrollParallax?: Flex__<typeof ParallaxWrapper>;
+  reveal?: Flex__<typeof Reveal>;
   programasAir?: Flex__<"section">;
   pagination?: Flex__<typeof AntdPagination>;
   airtable?: Flex__<typeof DataFetcher>;
@@ -560,7 +558,9 @@ function PlasmicHomepage__RenderFunc(props: {
                 {"Selecciona la FORMACI\u00d3N\nde CONDUCTORES"}
               </h1>
               <section
-                className={classNames(projectcss.all, sty.section__pLc4)}
+                data-plasmic-name={"section"}
+                data-plasmic-override={overrides.section}
+                className={classNames(projectcss.all, sty.section)}
               >
                 <div className={classNames(projectcss.all, sty.freeBox__mr2V2)}>
                   <Button
@@ -1008,51 +1008,6 @@ function PlasmicHomepage__RenderFunc(props: {
             </div>
           </section>
           <section
-            data-plasmic-name={"mesa"}
-            data-plasmic-override={overrides.mesa}
-            className={classNames(projectcss.all, sty.mesa)}
-          >
-            <Stack__
-              as={"div"}
-              data-plasmic-name={"mesaza"}
-              data-plasmic-override={overrides.mesaza}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.mesaza)}
-            >
-              <div className={classNames(projectcss.all, sty.column__wVn7G)}>
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__kjQ1)}
-                  displayHeight={
-                    hasVariant(globalVariants, "screen", "mobile")
-                      ? "210px"
-                      : hasVariant(globalVariants, "screen", "tablet")
-                      ? "424px"
-                      : "644px"
-                  }
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"100%"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={
-                    hasVariant(globalVariants, "screen", "mobile")
-                      ? "436px"
-                      : hasVariant(globalVariants, "screen", "tablet")
-                      ? "603px"
-                      : "1376px"
-                  }
-                  loading={"lazy"}
-                  src={{
-                    src: mesaOlgaRemovebgPreviewPngDsAq82Khaq7N,
-                    fullWidth: 626,
-                    fullHeight: 398,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-            </Stack__>
-          </section>
-          <section
             data-plasmic-name={"form"}
             data-plasmic-override={overrides.form}
             className={classNames(projectcss.all, sty.form)}
@@ -1066,7 +1021,11 @@ function PlasmicHomepage__RenderFunc(props: {
             >
               {"ESTA COMBINACI\u00d3N:"}
             </div>
-            <section className={classNames(projectcss.all, sty.section__vHdLy)}>
+            <section
+              data-plasmic-name={"botones"}
+              data-plasmic-override={overrides.botones}
+              className={classNames(projectcss.all, sty.botones)}
+            >
               <div
                 data-plasmic-name={"columns"}
                 data-plasmic-override={overrides.columns}
@@ -1160,43 +1119,25 @@ function PlasmicHomepage__RenderFunc(props: {
             data-plasmic-name={"introBloqueShoWs"}
             data-plasmic-override={overrides.introBloqueShoWs}
             className={classNames(projectcss.all, sty.introBloqueShoWs)}
-          >
-            <ParallaxWrapper
-              data-plasmic-name={"scrollParallax"}
-              data-plasmic-override={overrides.scrollParallax}
-              className={classNames("__wab_instance", sty.scrollParallax)}
-              previewInEditor={true}
-              speed={20}
-            >
-              <PlasmicImg__
-                alt={""}
-                className={classNames(sty.img___2B3X5)}
-                displayHeight={"1032px"}
-                displayMaxHeight={"none"}
-                displayMaxWidth={"100%"}
-                displayMinHeight={"0"}
-                displayMinWidth={"0"}
-                displayWidth={"auto"}
-                src={{
-                  src: mesaOlgaJpgG6LPdfZGkZno,
-                  fullWidth: 1131,
-                  fullHeight: 720,
-                  aspectRatio: undefined
-                }}
-              />
+          />
 
-              <h1
-                className={classNames(
-                  projectcss.all,
-                  projectcss.h1,
-                  projectcss.__wab_text,
-                  sty.h1__bX1Sk
-                )}
-              >
-                {"SHOWS EN LOS QUE PARTICIP\u00d3 ESA FORMACION"}
-              </h1>
-            </ParallaxWrapper>
-          </section>
+          <Reveal
+            data-plasmic-name={"reveal"}
+            data-plasmic-override={overrides.reveal}
+            className={classNames("__wab_instance", sty.reveal)}
+            triggerOnce={true}
+          >
+            <h1
+              className={classNames(
+                projectcss.all,
+                projectcss.h1,
+                projectcss.__wab_text,
+                sty.h1__bX1Sk
+              )}
+            >
+              {"SHOWS \nEN LOS QUE PARTICIP\u00d3 \nESA FORMACION"}
+            </h1>
+          </Reveal>
           <section
             data-plasmic-name={"programasAir"}
             data-plasmic-override={overrides.programasAir}
@@ -1571,6 +1512,7 @@ const PlasmicDescendants = {
     "dataDetails",
     "tusJugadas",
     "menu",
+    "section",
     "clear",
     "bt1",
     "_1",
@@ -1586,12 +1528,11 @@ const PlasmicDescendants = {
     "_8",
     "barra",
     "conductores",
-    "mesa",
-    "mesaza",
     "form",
+    "botones",
     "columns",
     "introBloqueShoWs",
-    "scrollParallax",
+    "reveal",
     "programasAir",
     "pagination",
     "airtable",
@@ -1602,6 +1543,22 @@ const PlasmicDescendants = {
   dataDetails: ["dataDetails"],
   tusJugadas: ["tusJugadas"],
   menu: ["menu"],
+  section: [
+    "section",
+    "clear",
+    "bt1",
+    "_1",
+    "bt2",
+    "_2",
+    "bt3",
+    "_3",
+    "bt4",
+    "_4",
+    "bt5",
+    "_7",
+    "bt6",
+    "_8"
+  ],
   clear: ["clear"],
   bt1: ["bt1", "_1"],
   _1: ["_1"],
@@ -1617,12 +1574,11 @@ const PlasmicDescendants = {
   _8: ["_8"],
   barra: ["barra"],
   conductores: ["conductores"],
-  mesa: ["mesa", "mesaza"],
-  mesaza: ["mesaza"],
-  form: ["form", "columns"],
+  form: ["form", "botones", "columns"],
+  botones: ["botones", "columns"],
   columns: ["columns"],
-  introBloqueShoWs: ["introBloqueShoWs", "scrollParallax"],
-  scrollParallax: ["scrollParallax"],
+  introBloqueShoWs: ["introBloqueShoWs"],
+  reveal: ["reveal"],
   programasAir: [
     "programasAir",
     "pagination",
@@ -1644,6 +1600,7 @@ type NodeDefaultElementType = {
   dataDetails: typeof RichDetails;
   tusJugadas: "div";
   menu: typeof AntdMenu;
+  section: "section";
   clear: typeof Button;
   bt1: "div";
   _1: "div";
@@ -1659,12 +1616,11 @@ type NodeDefaultElementType = {
   _8: "div";
   barra: "section";
   conductores: "section";
-  mesa: "section";
-  mesaza: "div";
   form: "section";
+  botones: "section";
   columns: "div";
   introBloqueShoWs: "section";
-  scrollParallax: typeof ParallaxWrapper;
+  reveal: typeof Reveal;
   programasAir: "section";
   pagination: typeof AntdPagination;
   airtable: typeof DataFetcher;
@@ -1736,6 +1692,7 @@ export const PlasmicHomepage = Object.assign(
     dataDetails: makeNodeComponent("dataDetails"),
     tusJugadas: makeNodeComponent("tusJugadas"),
     menu: makeNodeComponent("menu"),
+    section: makeNodeComponent("section"),
     clear: makeNodeComponent("clear"),
     bt1: makeNodeComponent("bt1"),
     _1: makeNodeComponent("_1"),
@@ -1751,12 +1708,11 @@ export const PlasmicHomepage = Object.assign(
     _8: makeNodeComponent("_8"),
     barra: makeNodeComponent("barra"),
     conductores: makeNodeComponent("conductores"),
-    mesa: makeNodeComponent("mesa"),
-    mesaza: makeNodeComponent("mesaza"),
     form: makeNodeComponent("form"),
+    botones: makeNodeComponent("botones"),
     columns: makeNodeComponent("columns"),
     introBloqueShoWs: makeNodeComponent("introBloqueShoWs"),
-    scrollParallax: makeNodeComponent("scrollParallax"),
+    reveal: makeNodeComponent("reveal"),
     programasAir: makeNodeComponent("programasAir"),
     pagination: makeNodeComponent("pagination"),
     airtable: makeNodeComponent("airtable"),
